@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AnswerController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -24,5 +25,9 @@ Route::group(['prefix' => 'auth', 'middleware' => ['guest']], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [RegisteredUserController::class, 'store']);
 });
-Route::apiResource('question', QuestionController::class)->middleware('auth:api');
+Route::group(['middleware' => ['auth:api']], function () {
 
+    Route::apiResource('question', QuestionController::class);
+    Route::post('question/{question}/answer', [AnswerController::class, 'store']);
+    Route::apiResource('answer', AnswerController::class)->only(['destroy', 'update']);
+});

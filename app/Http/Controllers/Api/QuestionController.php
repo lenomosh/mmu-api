@@ -23,7 +23,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        return response()->json(['data' => Question::query()->paginate(10)]);
+        return response()->json(['data' => Question::query()->with('answers')->paginate(10)]);
     }
 
     /**
@@ -47,7 +47,7 @@ class QuestionController extends Controller
      */
     public function show(Question $question)
     {
-        return response()->json(['data' => $question]);
+        return response()->json(['data' => $question->load('answers')]);
     }
 
     /**
