@@ -13,11 +13,13 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('questions', function (Blueprint $table) {
-            $table->id();
+            $table->uuid()->primary();
             $table->string('title');
             $table->string('slug')->index()->unique();
-            $table->text('body');
+            $table->text('body')->nullable();
             $table->unsignedBigInteger('user_id');
+            $table->bigInteger('views')->unsigned()->default(0)->index();
+
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
         });

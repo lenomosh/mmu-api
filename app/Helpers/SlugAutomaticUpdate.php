@@ -13,6 +13,8 @@ trait SlugAutomaticUpdate
 
     protected static string $slugColumn = 'slug';
 
+    protected static string $idColumn = 'uuid';
+
     protected static function boot()
     {
         parent::boot();
@@ -28,10 +30,11 @@ trait SlugAutomaticUpdate
     {
 
         $slug = Str::slug($model->getAttribute(static::$sluggableColumn));
-        $statement = "slug ~ '^{$slug}(-[0-9]+)?$'";
+        $statement = "slug ~ '^$slug(-[0-9]+)?$'";
         $unique_id = $model->getAttribute($model->primaryKey);
+        $idColumn = static::$idColumn;
         if ($unique_id) {
-            $statement = "slug ~ '^{$slug}(-[0-9]+)?$' AND id != {$unique_id}";
+            $statement = "slug ~ '^$slug(-[0-9]+)?$' AND $idColumn != '$unique_id'";
         }
         $count = static::query()->whereRaw($statement)->count() ? "_" . Str::random(6) : "";
         $model->setAttribute(static::$slugColumn, $slug . $count);

@@ -16,6 +16,19 @@ use function response;
 class QuestionController extends Controller
 {
 
+
+    public function upvote(Question $question)
+    {
+        $question->upvote();
+        return $question->userHasUpVoted();
+    }
+
+    public function downVote(Question $question)
+    {
+        $question->downVote();
+        return $question->userHasDownVoted();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +36,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        return response()->json(['data' => Question::query()->with('answers')->paginate(10)]);
+        return response()->json(['data' => Question::query()->with('author')->orderBy('views', 'desc')->paginate(5)]);
     }
 
     /**
@@ -47,7 +60,10 @@ class QuestionController extends Controller
      */
     public function show(Question $question)
     {
-        return response()->json(['data' => $question->load('answers')]);
+        $question->load('author');
+        $question->setRelation('answers', $question->answers()->with('author')->paginate(1));
+        $question->incrementViewCount();
+        return response()->json(['data' => $question]);
     }
 
     /**

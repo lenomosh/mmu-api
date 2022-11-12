@@ -25,6 +25,19 @@ class AnswerController extends Controller
         return response()->json(['data' => Answer::query()->paginate(10)]);
     }
 
+    public function upvote(Answer $answer)
+    {
+        $answer->upvote();
+        return $answer->userHasUpVoted();
+
+    }
+
+    public function downVote(Answer $answer)
+    {
+        $answer->downVote();
+        return $answer->userHasDownVoted();
+    }
+
     /**
      * Store a newly created resource in storage.
      *

@@ -13,15 +13,14 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('answers', function (Blueprint $table) {
-            $table->uuid()->primary();
-            $table->text('answer');
-            $table->bigInteger('views')->unsigned()->default(0)->index();
-            $table->foreignUuid('question_uuid')->references('uuid')->on('questions')->nullOnDelete();
+        Schema::create('votes', function (Blueprint $table) {
+            $table->uuid();
+            $table->foreignIdFor(User::class)->references('id')->on(User::getTableName());
+            $table->boolean('is_upvote')->default(true);
+            $table->string('votable_type')->index();
+            $table->string('votable_id')->index();
 
-            $table->foreignIdFor(User::class)->references('id')->on('users')->nullOnDelete();
             $table->timestamps();
-
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('answers');
+        Schema::dropIfExists('votes');
     }
 };

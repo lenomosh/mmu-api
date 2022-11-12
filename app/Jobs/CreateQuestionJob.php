@@ -19,7 +19,7 @@ class CreateQuestionJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(private string $title, private string $body, private User $user)
+    public function __construct(private string $title, private string|null $body, private User $user)
     {
         //
     }
