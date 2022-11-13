@@ -61,7 +61,7 @@ class QuestionController extends Controller
     public function show(Question $question)
     {
         $question->load('author');
-        $question->setRelation('answers', $question->answers()->with('author')->paginate(1));
+        $question->setRelation('answers', $question->answers()->with('author')->orderBy('updated_at', 'desc')->paginate(1));
         $question->incrementViewCount();
         return response()->json(['data' => $question]);
     }
