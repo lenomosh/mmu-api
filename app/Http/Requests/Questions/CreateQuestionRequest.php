@@ -24,7 +24,7 @@ class CreateQuestionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:50'],
+            'title' => ['required', 'string', 'max:70'],
             'body' => ['sometimes', 'string', 'max:200']
         ];
     }
