@@ -23,12 +23,7 @@ trait HasVotes
         if (!Auth::check()) {
             return false;
         }
-        return $this->votes()->where(
-                [
-                    'user_id' => Auth::id(),
-                    'is_upvote' => true,
-
-                ])->count() > 0;
+        return $this->votes()->where(['user_id' => Auth::id(), 'is_upvote' => true])->count() > 0;
     }
 
     public function votes(): MorphMany
@@ -48,11 +43,7 @@ trait HasVotes
         if (!Auth::check()) {
             return false;
         }
-        return $this->votes()->where(
-                [
-                    'user_id' => Auth::id(),
-                    'is_upvote' => false
-                ])->count() > 0;
+        return $this->votes()->where(['user_id' => Auth::id(), 'is_upvote' => false])->count() > 0;
     }
 
     public function upVotes(): Attribute
@@ -84,14 +75,10 @@ trait HasVotes
         );
     }
 
-    private function deleteUserVote()
+    private function deleteUserVote(): void
     {
 
-        $params =
-            [
-                'user_id' => Auth::id()
-            ];
-        if ($votable_type = $this->votes()->where($params)->first()) {
+        if ($votable_type = $this->votes()->where(['user_id' => Auth::id()])->first()) {
             $votable_type->delete();
         }
     }
@@ -104,11 +91,6 @@ trait HasVotes
             return;
         }
         $this->deleteUserVote();
-        $this->votes()->firstOrCreate(
-            [
-                'user_id' => Auth::id(),
-                'is_upvote' => false,
-            ]
-        );
+        $this->votes()->firstOrCreate(['user_id' => Auth::id(), 'is_upvote' => false]);
     }
 }
